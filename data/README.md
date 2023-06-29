@@ -27,6 +27,12 @@ The observational data in the `gpcc/` folder is based on [GPCC's Full Data Month
 
 > https://opendata.dwd.de/climate_environment/GPCC/html/fulldata-monthly_v2022_doi_download.html
 
+### Crop data
+
+The data in the `crop/` folder is based on the GGCMI crop calendar Phase 3 dataset, which is available at:
+
+> https://zenodo.org/record/5062513
+
 ## Data preparation
 
 ### CMIP6
@@ -54,3 +60,7 @@ The configuration of the `prepare_data2.sh` script is stored `ersst/anom.cfg`.
 2. Create the anomalies and project the anomalies onto the CMIP6 EOFs in the `cmip6/historical/pr/pcs/eofs.nc` file with the help of the `prepare_data2.sh` script from the CDO-scripts repository.
 
 The configuration of the `prepare_data2.sh` script is stored `gpcc/anom.cfg`.
+
+### Crop data
+
+The data has been projected onto the CMIP6 EOFs with the help of the CDO tool `cdo remapcon`.
