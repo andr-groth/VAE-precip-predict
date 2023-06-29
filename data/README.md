@@ -1,6 +1,6 @@
 # Example data
 
-In this folder, we provide example data for the Jupyter notebook examples in the `examples/` folder. The data is in netCDF format and has been prepared with the help of the CDO scripts, which are available at:
+In this folder, we provide example data for the Jupyter notebook examples in the repositories `examples/` folder. The data is in netCDF format and has been prepared with the help of the CDO scripts, which are available at:
 
 > https://github.com/andr-groth/cdo-scripts
 
@@ -37,8 +37,7 @@ The data preparation of the CMIP6 data involves the following steps:
 2. Merge the data into single files with the help of the `merge.sh` script from the CDO-scripts repository.
 3. Create the anomalies, EOFs and PCs with the help of the `prepare_data.sh` script from the CDO-scripts repository.
 
-Note:
-    The configuration of the `prepare_data.sh` script is stored in `anom.cfg` files in the variable subfolders, .i.e, `cmip6/historical/pr/anom.cfg` for precipitation and `cmip6/historical/tos/anom.cfg` for sea-surface temperature.
+The configuration of the `prepare_data.sh` script is stored in `anom.cfg` files in the variable subfolders, .i.e, `cmip6/historical/pr/anom.cfg` for precipitation and `cmip6/historical/tos/anom.cfg` for sea-surface temperature.
 
 ### Observational data
 
