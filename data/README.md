@@ -2,7 +2,7 @@
 
 In this folder, we provide example data for the Jupyter notebook examples in the repositories `examples/` folder. The data is in netCDF format and has been prepared with the help of the CDO scripts, which are available at:
 
-> https://github.com/andr-groth/cdo-scripts
+> https://github.com/andr-groth/CDO-scripts
 
 ## Data sources
 
