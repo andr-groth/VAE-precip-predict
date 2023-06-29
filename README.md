@@ -14,13 +14,13 @@ The framework is based on Groth & Chavez (2023). _submitted_.
 
     > https://github.com/andr-groth/VAE-project
 
-2. Sample data used in the notebook is included in the `data/` folder. The data is in netCDF format and has been prepared with the help of the __CDO scripts__, which are available at:
+2. Sample data used in the notebook is included in the [`data/`](/data/) folder. The data is in netCDF format and has been prepared with the help of the __CDO scripts__, which are available at:
 
     > https://andr-groth.github.io/CDO-scripts
 
-    For more information on the data preparation see the `data/README.md` file.
+    For more information on the data preparation see the [`data/README.md`](/data/README.md).
 
 
 ## Examples
 
-For example runs of the Jupyter notebooks see the `examples/` folder of this repository. The examples are based on the sample data in the `data/` folder.
+For example runs of the Jupyter notebooks see the [`examples/`](/examples/) folder of this repository. The examples are based on the sample data in the [`data/`](/data/) folder.
