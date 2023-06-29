@@ -10,7 +10,7 @@ In this folder, we provide example data for the Jupyter notebook examples in the
 
 The data in the `cmip6/historical/` folder is based on the CMIP6 historical experiment. The different variables are stored in separate subfolders, .i.e, `cmip6/historical/pr/` for precipitation and `cmip6/historical/tos/` for sea-surface temperature.
 
-The original CMIP6 data can be downloaded from the ESGF data portal with the help of the `wget` scripts, which are available in the `raw/` folders of the different subfolders.
+The original CMIP6 data can be downloaded from the ESGF data portal with the help of the `wget` scripts, which are available in the `raw/` folders of the different subfolders of the variables.
 
 The scripts are taken from the ESGF data portal at:
 
@@ -19,11 +19,11 @@ The scripts are taken from the ESGF data portal at:
 
 ### Observational data
 
-The observational data in the `ersst/` folder is based on _NOAA's Extended Reconstructed SST V5_ (ERSSTv5) dataset, which is available at:
+The observational data in the `ersst/` folder is based on [NOAA's Extended Reconstructed SST V5 (ERSSTv5)](https://doi.org/10.1175/jcli-d-16-0836.1) dataset, which is available at:
 
 > https://psl.noaa.gov/data/gridded/data.noaa.ersst.v5.html
 
-The observational data in the `gpcc/` folder is based on the _GPCC Full Data Monthly Product Version 2022_ dataset, which is available at:
+The observational data in the `gpcc/` folder is based on [GPCC's Full Data Monthly Product Version 2022](http://dx.doi.org/10.5676/DWD_GPCC/FD_M_V2022_100) dataset, which is available at:
 
 > https://opendata.dwd.de/climate_environment/GPCC/html/fulldata-monthly_v2022_doi_download.html
 
