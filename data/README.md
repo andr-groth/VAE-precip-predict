@@ -23,7 +23,7 @@ The observational data in the `ersst/` folder is based on _NOAA's Extended Recon
 
 > https://psl.noaa.gov/data/gridded/data.noaa.ersst.v5.html
 
-The observational data in the `gpcc` folder is based on the _GPCC Full Data Monthly Product Version 2022_ dataset, which is available at:
+The observational data in the `gpcc/` folder is based on the _GPCC Full Data Monthly Product Version 2022_ dataset, which is available at:
 
 > https://opendata.dwd.de/climate_environment/GPCC/html/fulldata-monthly_v2022_doi_download.html
 
