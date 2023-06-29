@@ -20,9 +20,6 @@ The framework is based on Groth & Chavez (2023). _submitted_.
 
     For more information on the data preparation see [`data/README.md`](/data/README.md).
 
-    /data/README.md
-
-
 ## Examples
 
 For example runs of the Jupyter notebooks see the [`examples/`](/examples/) folder of this repository. The examples are based on the sample data in the [`data/`](/data/) folder.

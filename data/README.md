@@ -1,6 +1,6 @@
 # Example data
 
-In this folder, we provide example data for the Jupyter notebook examples in the repositories `examples/` folder. The data is in netCDF format and has been prepared with the help of the CDO scripts, which are available at:
+In this folder, we provide example data for the Jupyter notebook examples in the repositories [`examples/`](/examples/) folder. The data is in netCDF format and has been prepared with the help of the CDO scripts, which are available at:
 
 > https://github.com/andr-groth/CDO-scripts
 
@@ -8,7 +8,7 @@ In this folder, we provide example data for the Jupyter notebook examples in the
 
 ### CMIP6
 
-The data in the `cmip6/historical/` folder is based on the CMIP6 historical experiment. The different variables are stored in separate subfolders, .i.e, `cmip6/historical/pr/` for precipitation and `cmip6/historical/tos/` for sea-surface temperature.
+The data in the [`cmip6/historical/`](/cmip6/historical/) folder is based on the CMIP6 historical experiment. The different variables are stored in separate subfolders, .i.e, `cmip6/historical/pr/` for precipitation and `cmip6/historical/tos/` for sea-surface temperature.
 
 The original CMIP6 data can be downloaded from the ESGF data portal with the help of the `wget` scripts, which are available in the `raw/` folders of the different subfolders of the variables.
 
