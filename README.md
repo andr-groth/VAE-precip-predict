@@ -18,7 +18,9 @@ The framework is based on Groth & Chavez (2023). _submitted_.
 
     > https://andr-groth.github.io/CDO-scripts
 
-    For more information on the data preparation see the [`data/README.md`](/data/README.md).
+    For more information on the data preparation see [`data/README.md`](/data/README.md).
+
+    /data/README.md
 
 
 ## Examples
