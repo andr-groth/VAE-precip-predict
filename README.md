@@ -2,6 +2,8 @@
 
 ## Overview
 
+Jupyter notebooks for the implementation of a variational autoencoder (VAE) for climate data modeling and prediction.
+
 The Jupyter notebooks demonstrate the process of training and exploring a Variational Autoencoder (VAE) on precipitation and sea-surface temperature data. The training process is divided into two steps: pre-training on CMIP6 data and transfer learning on observational data.
 
 The framework is based on Groth & Chavez (2023). _submitted_.
