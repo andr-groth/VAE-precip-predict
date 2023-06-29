@@ -8,13 +8,15 @@ The framework is based on Groth & Chavez (2023). _submitted_.
 
 ## Requirements
 
-1. The Jupyter notebooks requires the VAE package, which is available at:
+1. The Jupyter notebooks requires the __VAE package__, which is available at:
 
-    https://github.com/andr-groth/VAE-project
+    > https://github.com/andr-groth/VAE-project
 
-2. Sample data used in the notebook is included in the `data/` folder. The data is in netCDF format and has been prepared with the help of the CDO scripts, which are available at:
+2. Sample data used in the notebook is included in the `data/` folder. The data is in netCDF format and has been prepared with the help of the __CDO scripts__, which are available at:
 
-    https://andr-groth.github.io/cdo-scripts
+    > https://andr-groth.github.io/cdo-scripts
+
+    For more information on the data preparation see the `data/README.md` file.
 
 
 ## Examples
