@@ -275,7 +275,7 @@ _variables, _dimensions, _attributes = fileio.read_netcdf_multi(**params.data2, 
 
     data\gpcc\prj\pcs_anom_gpcc_v2020_1dgr.nc : 1 file(s) found.
     data\ersst\prj\pcs_anom_ersstv5.nc        : 1 file(s) found.
-    2/2 [==============================] - 0s 127ms/file
+    2/2 [==============================] - 0s 124ms/file
     
 
 We assume a single set of different variables for observational data.
@@ -503,8 +503,9 @@ Then, the model output is aligned with the target month and split into the diffe
 
 
 ```python
-export_lags = np.arange(-1, val_gen.prediction_length)
+# export_lags = np.arange(-1, val_gen.prediction_length)
 # export_lags = np.arange(-val_gen.input_length, val_gen.prediction_length)
+export_lags = [-1, 3, 6, 9, 11]
 ```
 
 
@@ -548,7 +549,7 @@ xcs_attributes = {
 
 ## Reconstruction in grid space
 
-In the following, the model output is projected into the grid space by forming the scalar product of the model output with the EOFs. The reult is exported as netCDF file.
+In the following, the model output is projected into the grid space by forming the scalar product of the model output with the EOFs. The result is exported as netCDF file.
 
 ### Load EOFs
 
@@ -564,7 +565,7 @@ _eof_variables, _eof_dimensions, _eof_attributes = fileio.read_netcdf_multi(file
 
     data\gpcc\prj\eofs.nc  : 1 file(s) found.
     data\ersst\prj\eofs.nc : 1 file(s) found.
-    2/2 [==============================] - 0s 16ms/file
+    2/2 [==============================] - 0s 10ms/file
     
 
 
@@ -591,7 +592,7 @@ print('Data variables :', list(xcs_variables))
 
 ### Load climatological mean
 
-To obtain absolute values, we also load the corresponding climatological mean fields. The netCDF files will be looked up in the folder `mean_path`, relative to the data folder.
+To obtain absolute values, we also load the corresponding climatological mean fields. The netCDF files will be looked up in the `mean_path` folder, relative to the data folders.
 
 
 ```python
@@ -604,7 +605,7 @@ _mean_variables, _mean_dimensions, _mean_attributes = fileio.read_netcdf_multi(f
 
     data\gpcc\mean\*.nc  : 1 file(s) found.
     data\ersst\mean\*.nc : 1 file(s) found.
-    2/2 [==============================] - 0s 18ms/file
+    2/2 [==============================] - 0s 8ms/file
     
 
 
@@ -621,7 +622,7 @@ for key, value in _mean_variables.items():
 
 ### Export to netCDF
 
-We form the dot product of the selected model outputs with the EOFs and add the climatological mean. Optionally, the log transform is reverted. The result is written to netCDF files in the folder given in `EXPORT_DIR`.
+We form the dot product of the model outputs with the EOFs and add the climatological mean. Optionally, the log transform is reverted. Different ensemble statistics are obtained from the stochastic output of the VAE. The result is written to netCDF files in the folder given in `EXPORT_DIR`.
 
 
 ```python
@@ -630,6 +631,8 @@ os.makedirs(EXPORT_DIR, exist_ok=True)
 
 
 ```python
+prcs = {'ensmedian': 50, 'enspctl10': 10, 'enspctl90': 90}
+
 for (data_key, value), (eof_key, eof) in zip(xcs_variables.items(), eof_variables.items()):
     print('-' * 3, data_key, '-' * (77 - len(data_key)))
     filename = '{prefix:s}' + data_key + '.{type:s}.nc'
@@ -646,7 +649,6 @@ for (data_key, value), (eof_key, eof) in zip(xcs_variables.items(), eof_variable
                         variables={data_key: np.mean(nc_variable, axis=1)},
                         **kwargs)
 
-    prcs = {'ensmedian': 50, 'enspctl10': 10, 'enspctl90': 90}
     nc_prcs = np.percentile(nc_variable, list(prcs.values()), axis=1)
     for type, value in zip(prcs, nc_prcs):
         fileio.write_netcdf(filename.format(prefix='anom_', type=type), variables={data_key: value}, **kwargs)
@@ -690,6 +692,118 @@ for (data_key, value), (eof_key, eof) in zip(xcs_variables.items(), eof_variable
     Write: results\2023-06-16T15.59\sst.enspctl10.nc
     Write: results\2023-06-16T15.59\sst.enspctl90.nc
     
+
+## Post processing
+
+In the following we derive predictions of cumulative rainfall indices covering the growing seasons of the main crops. We first load the data on the growing season from the `data/crop/` folder. The data is assumed to be on the same grid as the EOFs.
+
+
+```python
+crop_file = 'data/crop/soy_rf_ggcmi_crop_calendar_phase3_v1.01_1dgr.nc'
+```
+
+
+```python
+crop_variables, _, _ = fileio.read_netcdf(filename=crop_file)
+print('Available data:', {k: v.shape for k, v in crop_variables.items()})
+```
+
+    Available data: {'planting_day': (43, 46), 'maturity_day': (43, 46), 'growing_season_length': (43, 46), 'data_source_used': (43, 46)}
+    
+
+We load the netCDF files with the VAE output for further post-processing.
+
+
+```python
+filename = os.path.join(EXPORT_DIR, variable_names[0] + '*.nc')
+result_variables, result_dimensions, result_attributes = fileio.read_netcdf_multi(filename=filename, num2date=True)
+print(*list(result_variables.keys()), sep='\n')
+```
+
+    results\2023-06-16T15.59\precip*.nc : 4 file(s) found.
+    4/4 [==============================] - 1s 194ms/file
+    results\2023-06-16T15.59\precip.ensmean.nc
+    results\2023-06-16T15.59\precip.ensmedian.nc
+    results\2023-06-16T15.59\precip.enspctl10.nc
+    results\2023-06-16T15.59\precip.enspctl90.nc
+    
+
+
+```python
+planting_day = crop_variables['planting_day']
+growing_season_length = crop_variables['growing_season_length']
+```
+
+We obtain the cumulative values for each of the loaded VAE outputs and write the results to netCDF files with the prefix `cum_` preprended to the filename. THe files are saved in the same folder as the VAE output files.
+
+
+```python
+for filename, values in result_variables.items():
+    # monthly values refer to end month (M = month end frequency)
+    source_time = pd.to_datetime(result_dimensions[filename]['time']).snap('M')
+    # new time is Jan-01 of each year (YS = year start frequency)
+    target_time = source_time.snap('YS').unique()
+
+    # iterate over variables
+    out_values = dict()
+    for key, value in values.items():
+        out_value = np.full((len(target_time), *value.shape[1:]), fill_value=np.nan, dtype=value.dtype)
+
+        # iterate over grid points
+        pbar = ks.utils.Progbar(value.shape[-1], unit_name='Longitude')
+        for lon_idx in range(value.shape[-1]):
+            pbar.add(1)
+            for lat_idx in range(value.shape[-2]):
+                if np.all(np.isnan(value[..., lat_idx, lon_idx])):
+                    continue
+
+                # converting data to Dataframe makes datetime manipulations easier
+                df = pd.DataFrame(value[..., lat_idx, lon_idx], index=source_time)
+
+                # get total cumulative rainfall at grid point
+                df = df.cumsum(axis=0)
+
+                # interpolate on daily time scales to account for fraction of month (slower computation!)
+                df = df.asfreq('D').interpolate('linear')
+
+                # get start and end dates of crop seasons
+                start_time = target_time + pd.to_timedelta(planting_day[lat_idx, lon_idx] - 1, unit='D')
+                end_time = start_time + pd.to_timedelta(growing_season_length[lat_idx, lon_idx], unit='D')
+
+                # get cumulative rainfall from difference between end and start of crop season
+                start_value = df.reindex(index=start_time, method='nearest').to_numpy()
+                end_value = df.reindex(index=end_time, method='nearest').to_numpy()
+                out_value[..., lat_idx, lon_idx] = end_value - start_value
+
+        out_values[key] = out_value
+
+    out_filename = os.path.join(os.path.dirname(filename), 'cum_' + os.path.basename(filename))
+    fileio.write_netcdf(out_filename,
+                        variables=out_values,
+                        dimensions=result_dimensions[filename] | {'time': target_time},
+                        attributes=result_attributes[filename])
+```
+
+    46/46 [==============================] - 15s 330ms/Longitude
+    Write: results\2023-06-16T15.59\cum_precip.ensmean.nc
+    46/46 [==============================] - 15s 335ms/Longitude
+    Write: results\2023-06-16T15.59\cum_precip.ensmedian.nc
+    46/46 [==============================] - 15s 338ms/Longitude
+    Write: results\2023-06-16T15.59\cum_precip.enspctl10.nc
+    46/46 [==============================] - 15s 331ms/Longitude
+    Write: results\2023-06-16T15.59\cum_precip.enspctl90.nc
+    
+
+### Remark on country averages
+
+To extract country averages from the gridded cumulative rainfall data, we can use the CDO operators `fldmean` and `maskregion`. For example, we can use the following command
+
+```shell
+cdo fldmean -maskregion,dcw:TZ infile.nc outfile.nc
+```
+to extract the country average for Tanzania. To extract the country average for another country, we can replace `TZ` with the corresponding country code. For more details, see the [CDO documentation](https://code.mpimet.mpg.de/projects/cdo/embedded/cdo.pdf) and the list of [country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+
+To use country codes together with the `maskregion` operator, we need to install the `gmt-dcw` package, which is available in the Ubuntu repositories. To install the package, run `sudo apt install gmt-dcw` and set the environment variable `DCW_DIR` to the path of the `dcw-gmt` folder, e.g. `export DIR_CW=/usr/share/gmt-dcw/`.
 
 ## Appendix
 
@@ -741,15 +855,6 @@ if EXPORT:
     else:
         fig.savefig('model_input.svg')
 ```
-
-    Time: 1997-08-01 00:00:00
-    
-
-
-    
-![png](VAEp_explore_files/VAEp_explore_89_1.png)
-    
-
 
 
 ```python
