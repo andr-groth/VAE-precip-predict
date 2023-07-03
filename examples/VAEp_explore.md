@@ -803,7 +803,7 @@ cdo fldmean -maskregion,dcw:TZ infile.nc outfile.nc
 ```
 to extract the country average for Tanzania. To extract the country average for another country, we can replace `TZ` with the corresponding country code. For more details, see the [CDO documentation](https://code.mpimet.mpg.de/projects/cdo/embedded/cdo.pdf) and the list of [country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
 
-To use country codes together with the `maskregion` operator, we need to install the `gmt-dcw` package, which is available in the Ubuntu repositories. To install the package, run `sudo apt install gmt-dcw` and set the environment variable `DCW_DIR` to the path of the `dcw-gmt` folder, e.g. `export DIR_CW=/usr/share/gmt-dcw/`.
+To use country codes together with the `maskregion` operator, we need to install the `gmt-dcw` package, which is available in the Ubuntu repositories. To install the package, run `sudo apt install gmt-dcw` and set the environment variable `DCW_DIR` to the path of the `dcw-gmt` folder, e.g. `export DIR_DCW=/usr/share/gmt-dcw/`.
 
 ## Appendix
 
