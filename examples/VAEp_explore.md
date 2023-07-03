@@ -275,7 +275,7 @@ _variables, _dimensions, _attributes = fileio.read_netcdf_multi(**params.data2, 
 
     data\gpcc\prj\pcs_anom_gpcc_v2020_1dgr.nc : 1 file(s) found.
     data\ersst\prj\pcs_anom_ersstv5.nc        : 1 file(s) found.
-    2/2 [==============================] - 0s 143ms/file
+    2/2 [==============================] - 0s 115ms/file
     
 
 We assume a single set of different variables for observational data.
@@ -505,7 +505,7 @@ Then, the model output is aligned with the target month and split into the diffe
 ```python
 # export_lags = np.arange(-1, val_gen.prediction_length)
 # export_lags = np.arange(-val_gen.input_length, val_gen.prediction_length)
-export_lags = [2, 5, 8, 11]  # corresponds to 3, 6, 9, 12 month lead
+export_lags = [-1, 2, 5, 8, 11]  # correspond to 0, 3, 6, 9, 12 month lead
 ```
 
 
@@ -565,7 +565,7 @@ _eof_variables, _eof_dimensions, _eof_attributes = fileio.read_netcdf_multi(file
 
     data\gpcc\prj\eofs.nc  : 1 file(s) found.
     data\ersst\prj\eofs.nc : 1 file(s) found.
-    2/2 [==============================] - 0s 20ms/file
+    2/2 [==============================] - 0s 0s/file
     
 
 
@@ -605,7 +605,7 @@ _mean_variables, _mean_dimensions, _mean_attributes = fileio.read_netcdf_multi(f
 
     data\gpcc\mean\*.nc  : 1 file(s) found.
     data\ersst\mean\*.nc : 1 file(s) found.
-    2/2 [==============================] - 0s 18ms/file
+    2/2 [==============================] - 0s 9ms/file
     
 
 
@@ -721,7 +721,7 @@ print(*list(result_variables.keys()), sep='\n')
 ```
 
     results\2023-06-16T15.59\precip*.nc : 4 file(s) found.
-    4/4 [==============================] - 1s 179ms/file
+    4/4 [==============================] - 1s 226ms/file
     results\2023-06-16T15.59\precip.ensmean.nc
     results\2023-06-16T15.59\precip.ensmedian.nc
     results\2023-06-16T15.59\precip.enspctl10.nc
@@ -784,13 +784,13 @@ for filename, values in result_variables.items():
                         attributes=result_attributes[filename])
 ```
 
-    46/46 [==============================] - 13s 291ms/Longitude
+    46/46 [==============================] - 15s 332ms/Longitude
     Write: results\2023-06-16T15.59\cum_precip.ensmean.nc
-    46/46 [==============================] - 13s 288ms/Longitude
+    46/46 [==============================] - 17s 386ms/Longitude
     Write: results\2023-06-16T15.59\cum_precip.ensmedian.nc
-    46/46 [==============================] - 13s 284ms/Longitude
+    46/46 [==============================] - 15s 327ms/Longitude
     Write: results\2023-06-16T15.59\cum_precip.enspctl10.nc
-    46/46 [==============================] - 13s 287ms/Longitude
+    46/46 [==============================] - 15s 326ms/Longitude
     Write: results\2023-06-16T15.59\cum_precip.enspctl90.nc
     
 
