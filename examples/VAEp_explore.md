@@ -9,9 +9,9 @@ The notebook demonstrates the process of exploring a Variational Autoencoder (VA
     * _Latent Sampling_: The latent sampling takes `z_mean` and `z_log_var` as inputs and generates a random latent sample `z`.
     * _Decoder_: The decoder reconstructs the input `x` by taking the latent sample `z` and producing the decoded output `y`. The decoding is done backward in time, maintaining the input order.
    * _Decoder for Prediction_: The second decoder also takes the latent sample `z` but generates a forward-time prediction output.
-   
+
 3. The model weights from the training process are loaded from the `LOG_DIR` folder.
-   
+
 4. Observational data in netCDF format is loaded, with different variables stacked along the channel axis. The data is split into training and validation time intervals.
 
 5. Properties of the `encoder` and `decoder` are analyzed. KL divergence of latent variables is analyzed to identify important dimensions. The temporal behavior of latent variables is also examined using the validation dataset.
@@ -96,7 +96,7 @@ print('EXPORT_DIR :', EXPORT_DIR)
     LOG_DIR    : logs/2023-06-16T15.59
     MODEL_FILE : model.100.h5
     EXPORT_DIR : results/2023-06-16T15.59
-    
+
 
 First let's load the parameters from the model training in `trainer_config.yaml`.
 
@@ -115,7 +115,7 @@ params = SimpleNamespace(**params)
 ```
 
     Load configuration from: logs\2023-06-16T15.59\trainer_config.yaml
-    
+
 
 Make some modifications to the parameters. To change the number of model runs that are used to obtain the ensemble statistics exported as netCDF, we can change the parameter `repeat_samples`.
 
@@ -207,9 +207,9 @@ ks.utils.plot_model(model, show_shapes=True, dpi=75, rankdir='LR')
 
 
 
-    
+
 ![png](VAEp_explore_files/VAEp_explore_35_0.png)
-    
+
 
 
 
@@ -222,33 +222,33 @@ model.summary(line_length=120)
 
     Model: "mVAEp"
     ________________________________________________________________________________________________________________________
-    Layer (type)                           Output Shape               Param #       Connected to                            
+    Layer (type)                           Output Shape               Param #       Connected to
     ========================================================================================================================
-    encoder_input (InputLayer)             [(None, 1, 12, 40)]        0                                                     
+    encoder_input (InputLayer)             [(None, 1, 12, 40)]        0
     ________________________________________________________________________________________________________________________
-    encoder_cond (InputLayer)              [(None, 1, 52)]            0                                                     
+    encoder_cond (InputLayer)              [(None, 1, 52)]            0
     ________________________________________________________________________________________________________________________
-    encoder (Functional)                   [(None, 24), (None, 24)]   187210        encoder_input[0][0]                     
-                                                                                    encoder_cond[0][0]                      
+    encoder (Functional)                   [(None, 24), (None, 24)]   187210        encoder_input[0][0]
+                                                                                    encoder_cond[0][0]
     ________________________________________________________________________________________________________________________
-    latent (Functional)                    (None, 1, 24)              0             encoder[0][0]                           
-                                                                                    encoder[0][1]                           
+    latent (Functional)                    (None, 1, 24)              0             encoder[0][0]
+                                                                                    encoder[0][1]
     ________________________________________________________________________________________________________________________
-    decoder_cond (InputLayer)              [(None, 1, 52)]            0                                                     
+    decoder_cond (InputLayer)              [(None, 1, 52)]            0
     ________________________________________________________________________________________________________________________
-    prediction_cond (InputLayer)           [(None, 1, 52)]            0                                                     
+    prediction_cond (InputLayer)           [(None, 1, 52)]            0
     ________________________________________________________________________________________________________________________
-    decoder (Functional)                   (None, 1, 12, 40)          217090        latent[0][0]                            
-                                                                                    decoder_cond[0][0]                      
+    decoder (Functional)                   (None, 1, 12, 40)          217090        latent[0][0]
+                                                                                    decoder_cond[0][0]
     ________________________________________________________________________________________________________________________
-    prediction (Functional)                (None, 1, 12, 40)          217090        latent[0][0]                            
-                                                                                    prediction_cond[0][0]                   
+    prediction (Functional)                (None, 1, 12, 40)          217090        latent[0][0]
+                                                                                    prediction_cond[0][0]
     ========================================================================================================================
     Total params: 621,390
     Trainable params: 3,966
     Non-trainable params: 617,424
     ________________________________________________________________________________________________________________________
-    
+
 
 ### Load model weights
 
@@ -262,7 +262,7 @@ print('Load model weights from:', os.path.normpath(fn))
 ```
 
     Load model weights from: logs\2023-06-16T15.59\model.100.h5
-    
+
 
 ## Data
 
@@ -276,7 +276,7 @@ _variables, _dimensions, _attributes = fileio.read_netcdf_multi(**params.data2, 
     data\gpcc\prj\pcs_anom_gpcc_v2020_1dgr.nc : 1 file(s) found.
     data\ersst\prj\pcs_anom_ersstv5.nc        : 1 file(s) found.
     2/2 [==============================] - 0s 115ms/file
-    
+
 
 We assume a single set of different variables for observational data.
 
@@ -299,7 +299,7 @@ print('Channel found   :', variable_channels)
 
     Variables found : ('precip', 'sst')
     Channel found   : (20, 20)
-    
+
 
 We stack the different variables along the last axis, the channel axis, and add a leading singleton dimension for `set_size=1`.
 
@@ -321,7 +321,7 @@ print(f"Validation interval : {time[validation_split:][[0, -1]]}")
 
     Training interval   : DatetimeIndex(['1891-01-01', '1980-08-01'], dtype='datetime64[ns]', freq=None)
     Validation interval : DatetimeIndex(['1980-09-01', '2019-12-01'], dtype='datetime64[ns]', freq=None)
-    
+
 
 In the following plot, we show the observational data.
 
@@ -341,15 +341,15 @@ for variable_name in variable_names:
 ```
 
 
-    
+
 ![png](VAEp_explore_files/VAEp_explore_51_0.png)
-    
 
 
 
-    
+
+
 ![png](VAEp_explore_files/VAEp_explore_51_1.png)
-    
+
 
 
 ## Prepare generator
@@ -395,7 +395,7 @@ val_gen.summary()
       targets
         decoder          : (320, 1, 12, 40)
         prediction       : (320, 1, 12, 40)
-    
+
 
 ## Latent space
 
@@ -410,9 +410,9 @@ fig, ax, z_order, kl_div = vplt.encoder_boxplot(encoder, val_gen, plottype='kl',
 ```
 
 
-    
+
 ![png](VAEp_explore_files/VAEp_explore_58_0.png)
-    
+
 
 
 The plot shows the KL divergence of the latent variables for each of the latent dimension separately. The dimensions are sorted in descending order of the KL divergence. Latent dimensions with a high KL divergence are more important for the reconstruction with the decoder. Latent dimensions that have a KL divergence close to zero are unused dimensions; i.e. they are practically not important for the reconstruction.
@@ -477,9 +477,9 @@ _ = rax.set_xlabel('Cycles per year')
 ```
 
 
-    
+
 ![png](VAEp_explore_files/VAEp_explore_63_0.png)
-    
+
 
 
 ## Model output
@@ -566,7 +566,7 @@ _eof_variables, _eof_dimensions, _eof_attributes = fileio.read_netcdf_multi(file
     data\gpcc\prj\eofs.nc  : 1 file(s) found.
     data\ersst\prj\eofs.nc : 1 file(s) found.
     2/2 [==============================] - 0s 0s/file
-    
+
 
 
 ```python
@@ -588,7 +588,7 @@ print('Data variables :', list(xcs_variables))
 
     EOF variables  : ['pr', 'tos']
     Data variables : ['precip', 'sst']
-    
+
 
 ### Load climatological mean
 
@@ -606,7 +606,7 @@ _mean_variables, _mean_dimensions, _mean_attributes = fileio.read_netcdf_multi(f
     data\gpcc\mean\*.nc  : 1 file(s) found.
     data\ersst\mean\*.nc : 1 file(s) found.
     2/2 [==============================] - 0s 9ms/file
-    
+
 
 
 ```python
@@ -691,7 +691,7 @@ for (data_key, value), (eof_key, eof) in zip(xcs_variables.items(), eof_variable
     Write: results\2023-06-16T15.59\sst.ensmedian.nc
     Write: results\2023-06-16T15.59\sst.enspctl10.nc
     Write: results\2023-06-16T15.59\sst.enspctl90.nc
-    
+
 
 ## Post processing
 
@@ -709,7 +709,7 @@ print('Available data:', {k: v.shape for k, v in crop_variables.items()})
 ```
 
     Available data: {'planting_day': (43, 46), 'maturity_day': (43, 46), 'growing_season_length': (43, 46), 'data_source_used': (43, 46)}
-    
+
 
 We load the netCDF files with the VAE output for further post-processing.
 
@@ -726,7 +726,7 @@ print(*list(result_variables.keys()), sep='\n')
     results\2023-06-16T15.59\precip.ensmedian.nc
     results\2023-06-16T15.59\precip.enspctl10.nc
     results\2023-06-16T15.59\precip.enspctl90.nc
-    
+
 
 
 ```python
@@ -792,7 +792,7 @@ for filename, values in result_variables.items():
     Write: results\2023-06-16T15.59\cum_precip.enspctl10.nc
     46/46 [==============================] - 15s 326ms/Longitude
     Write: results\2023-06-16T15.59\cum_precip.enspctl90.nc
-    
+
 
 ### Remark on country averages
 
@@ -804,63 +804,3 @@ cdo fldmean -maskregion,dcw:TZ infile.nc outfile.nc
 to extract the country average for Tanzania. To extract the country average for another country, we can replace `TZ` with the corresponding country code. For more details, see the [CDO documentation](https://code.mpimet.mpg.de/projects/cdo/embedded/cdo.pdf) and the list of [country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
 
 To use country codes together with the `maskregion` operator, we need to install the `gmt-dcw` package, which is available in the Ubuntu repositories. To install the package, run `sudo apt install gmt-dcw` and set the environment variable `DCW_DIR` to the path of the `dcw-gmt` folder, e.g. `export DIR_DCW=/usr/share/gmt-dcw/`.
-
-## Appendix
-
-### Input example
-
-
-```python
-EXPORT = False
-show_prediction = False
-rows = 6
-fig, axs = plt.subplots(rows, 2, figsize=(5.5 * 0.8, rows * 0.5), sharex='col', sharey='row', gridspec_kw={'hspace': 0})
-
-batch_nr = 19
-sample_nr = 1
-inputs, targets = val_gen[batch_nr]
-xc_batch, yc_batch = model.predict(inputs)
-r = val_gen.repeat_samples
-s = sample_nr * r
-
-channels = [0, 1, 2, 20, 21, 22]
-
-idx = val_gen.get_index(batch_nr)[:, 1] + validation_split
-print('Time:', time[idx][s])
-for n, (ax, x, xc) in enumerate(
-        zip(axs[:, 0], targets['decoder'][s, 0, ...][..., channels].T, xc_batch[s:s + r, 0, ...][..., channels].T)):
-    ax.plot(range(-val_gen.input_length, 0), x, '.-', color='tab:blue', zorder=3)
-    if show_prediction:
-        ax.plot(range(-val_gen.input_length, 0), xc, '.-', color='tab:orange', zorder=2)
-
-    ax.set_ylabel(channels[n], rotation=0, ha='right', va='center')
-
-    ax.yaxis.set_major_locator(ticker.NullLocator())
-
-ax.xaxis.set_major_locator(ticker.FixedLocator(range(-16, 0, 5)))
-
-for n, (ax, y, yc) in enumerate(
-        zip(axs[:, 1], targets['prediction'][s, 0, ...][..., channels].T, yc_batch[s:s + r, 0, ...][..., channels].T)):
-    ax.plot(y, '.-', color='tab:blue', zorder=3)
-    if show_prediction:
-        ax.plot(yc, '.-', color='tab:orange', zorder=2)
-
-    ax.yaxis.set_major_locator(ticker.NullLocator())
-
-fig.tight_layout()
-if EXPORT:
-    plt.rcParams['svg.fonttype'] = 'none'
-    if show_prediction:
-        fig.savefig('model_output.svg')
-    else:
-        fig.savefig('model_input.svg')
-```
-
-    Time: 1997-08-01 00:00:00
-    
-
-
-    
-![png](VAEp_explore_files/VAEp_explore_100_1.png)
-    
-

@@ -114,7 +114,7 @@ else:
 ```
 
     Continue training from epoch 100 in: logs\2023-06-16T15.59
-    
+
 
 ## Parameters
 
@@ -257,7 +257,7 @@ params = SimpleNamespace(**params)
 ```
 
     Load configuration from: logs\2023-06-16T15.59\trainer_config.yaml
-    
+
 
 ## Model
 
@@ -329,9 +329,9 @@ ks.utils.plot_model(model, show_shapes=True, dpi=75, rankdir='LR')
 
 
 
-    
+
 ![png](VAEp_train_files/VAEp_train_37_0.png)
-    
+
 
 
 
@@ -344,35 +344,35 @@ model.summary(line_length=120)
 
     Model: "mVAEp"
     ________________________________________________________________________________________________________________________
-    Layer (type)                           Output Shape               Param #       Connected to                            
+    Layer (type)                           Output Shape               Param #       Connected to
     ========================================================================================================================
-    encoder_input (InputLayer)             [(None, 1, 12, 40)]        0                                                     
+    encoder_input (InputLayer)             [(None, 1, 12, 40)]        0
     ________________________________________________________________________________________________________________________
-    encoder_cond (InputLayer)              [(None, 1, 52)]            0                                                     
+    encoder_cond (InputLayer)              [(None, 1, 52)]            0
     ________________________________________________________________________________________________________________________
-    encoder (Functional)                   [(None, 24), (None, 24)]   187210        encoder_input[0][0]                     
-                                                                                    encoder_cond[0][0]                      
+    encoder (Functional)                   [(None, 24), (None, 24)]   187210        encoder_input[0][0]
+                                                                                    encoder_cond[0][0]
     ________________________________________________________________________________________________________________________
-    latent (Functional)                    (None, 1, 24)              0             encoder[0][0]                           
-                                                                                    encoder[0][1]                           
+    latent (Functional)                    (None, 1, 24)              0             encoder[0][0]
+                                                                                    encoder[0][1]
     ________________________________________________________________________________________________________________________
-    decoder_cond (InputLayer)              [(None, 1, 52)]            0                                                     
+    decoder_cond (InputLayer)              [(None, 1, 52)]            0
     ________________________________________________________________________________________________________________________
-    prediction_cond (InputLayer)           [(None, 1, 52)]            0                                                     
+    prediction_cond (InputLayer)           [(None, 1, 52)]            0
     ________________________________________________________________________________________________________________________
-    beta (InputLayer)                      [(None, 1)]                0                                                     
+    beta (InputLayer)                      [(None, 1)]                0
     ________________________________________________________________________________________________________________________
-    decoder (Functional)                   (None, 1, 12, 40)          217090        latent[0][0]                            
-                                                                                    decoder_cond[0][0]                      
+    decoder (Functional)                   (None, 1, 12, 40)          217090        latent[0][0]
+                                                                                    decoder_cond[0][0]
     ________________________________________________________________________________________________________________________
-    prediction (Functional)                (None, 1, 12, 40)          217090        latent[0][0]                            
-                                                                                    prediction_cond[0][0]                   
+    prediction (Functional)                (None, 1, 12, 40)          217090        latent[0][0]
+                                                                                    prediction_cond[0][0]
     ========================================================================================================================
     Total params: 621,390
     Trainable params: 618,846
     Non-trainable params: 2,544
     ________________________________________________________________________________________________________________________
-    
+
 
 ### Load model weights (optional)
 
@@ -388,7 +388,7 @@ if INITIAL_EPOCH > 0:
 ```
 
     Load model weights from: logs\2023-06-16T15.59\model.10.h5
-    
+
 
 ## Data
 
@@ -400,7 +400,7 @@ For the transfer learning, we use observational data. The raw gridded data is pr
 
 ### CMIP data
 
-First, we load the netCDF files of CMIP data for pre-training. 
+First, we load the netCDF files of CMIP data for pre-training.
 
 
 ```python
@@ -410,7 +410,7 @@ _variables, _dimensions, _attributes = fileio.read_netcdf_multi(**params.data, n
     data\cmip6\historical\pr\pcs\pcs*.nc  : 103 file(s) found.
     data\cmip6\historical\tos\pcs\pcs*.nc : 103 file(s) found.
     206/206 [==============================] - 25s 123ms/file
-    
+
 
 We group the netCDF files and their variables by the global attributes  `source_id` + `variant_label`. The attribute `source_id` refers to the model name (e.g. `ACCESS-CM2`) and he attribute `variant_label` to the model run (e.g. `r1i1p1f1`).
 
@@ -450,7 +450,7 @@ else:
 
     ✓ One variable combination found: ('pr', 'tos')
     ✓ One channel combination found: (20, 20)
-    
+
 
 The following table summarizes the models and their different runs.
 
@@ -463,7 +463,7 @@ display(df.replace(0, ''))
 ```
 
     Number of model runs found : 103
-    
+
 
 
 <div>
@@ -763,7 +763,7 @@ print('Shapes of model runs :', {val.shape for val in dataset})
 ```
 
     Shapes of model runs : {(1, 1980, 40)}
-    
+
 
 We split the datasets into one set for training and one set for validation.
 
@@ -776,7 +776,7 @@ print('Size of validation dataset :', len(dataset) - validation_split)
 
     Size of training dataset   : 72
     Size of validation dataset : 31
-    
+
 
 ### Observational data
 
@@ -790,7 +790,7 @@ _variables2, _dimensions2, _attributes2 = fileio.read_netcdf_multi(**params.data
     data\gpcc\prj\pcs_anom_gpcc_v2020_1dgr.nc : 1 file(s) found.
     data\ersst\prj\pcs_anom_ersstv5.nc        : 1 file(s) found.
     2/2 [==============================] - 0s 129ms/file
-    
+
 
 We assume a single set of different variables for observational data.
 
@@ -811,7 +811,7 @@ print('Channel found   :', variable2_channels)
 
     Variables found : ('precip', 'sst')
     Channel found   : (20, 20)
-    
+
 
 We stack the different variables along the last axis, the channel axis, and add a leading singleton dimension for `set_size=1`.
 
@@ -833,7 +833,7 @@ print(f"Validation interval : {time2[validation_split2:][[0, -1]]}")
 
     Training interval   : DatetimeIndex(['1891-01-01', '1980-08-01'], dtype='datetime64[ns]', freq=None)
     Validation interval : DatetimeIndex(['1980-09-01', '2019-12-01'], dtype='datetime64[ns]', freq=None)
-    
+
 
 ### Plot data
 
@@ -861,15 +861,15 @@ for variable_name, variable2_name in zip(variable_names, variable2_names):
 ```
 
 
-    
+
 ![png](VAEp_train_files/VAEp_train_69_0.png)
-    
 
 
 
-    
+
+
 ![png](VAEp_train_files/VAEp_train_69_1.png)
-    
+
 
 
 We compare the variance of the two datasets.
@@ -902,9 +902,9 @@ for (uax, bax), variable_name, variable2_name in zip(axs.T, variable_names, vari
 ```
 
 
-    
+
 ![png](VAEp_train_files/VAEp_train_71_0.png)
-    
+
 
 
 ## Pre-training
@@ -913,7 +913,7 @@ for (uax, bax), variable_name, variable2_name in zip(axs.T, variable_names, vari
 
 #### Beta scheduler
 
-For the model training, we first need a scheduler for the beta values in each epoch that scales the KL loss. 
+For the model training, we first need a scheduler for the beta values in each epoch that scales the KL loss.
 
 
 ```python
@@ -928,7 +928,7 @@ beta_scheduler.summary()
       upper    : 5
       midpoint : 5
       rate     : 1
-    
+
 
 #### Fit generator on CMIP
 
@@ -971,7 +971,7 @@ fit_gen.summary()
       targets
         decoder          : (640, 1, 12, 40)
         prediction       : (640, 1, 12, 40)
-    
+
 
 #### Validation generator on CMIP
 
@@ -1016,7 +1016,7 @@ else:
       targets
         decoder          : (640, 1, 12, 40)
         prediction       : (640, 1, 12, 40)
-    
+
 
 #### Validation generator on observations
 
@@ -1063,7 +1063,7 @@ val_gen_obs.summary()
       targets
         decoder          : (160, 1, 12, 40)
         prediction       : (160, 1, 12, 40)
-    
+
 
 ### Prepare callbacks
 
@@ -1103,13 +1103,6 @@ hist = model.fit(fit_gen,
     0batch [00:00, ?batch/s]
 
 
-For later comparison, we keep the values of the pre-trained weights of the conditional layers.
-
-
-```python
-pre_weights = {w.name.split(':')[0]: K.get_value(w) for w in model.weights if 'cond' in w.name}
-```
-
 ## Transfer learning
 
 In the transfer learning, we only use the observational data.  Data prior to the validation split is used for the training and data after the validation split for validation.
@@ -1134,7 +1127,7 @@ beta_scheduler2.summary()
       upper    : 5
       midpoint : 5
       rate     : 1
-    
+
 
 #### Fit generator
 
@@ -1181,7 +1174,7 @@ fit_gen2.summary()
       targets
         decoder          : (160, 1, 12, 40)
         prediction       : (160, 1, 12, 40)
-    
+
 
 #### Validation generator
 
@@ -1227,7 +1220,7 @@ val_gen2.summary()
       targets
         decoder          : (160, 1, 12, 40)
         prediction       : (160, 1, 12, 40)
-    
+
 
 ### Modify model
 
@@ -1249,35 +1242,35 @@ model2.summary(line_length=120)
 
     Model: "mVAEp"
     ________________________________________________________________________________________________________________________
-    Layer (type)                           Output Shape               Param #       Connected to                            
+    Layer (type)                           Output Shape               Param #       Connected to
     ========================================================================================================================
-    encoder_input (InputLayer)             [(None, 1, 12, 40)]        0                                                     
+    encoder_input (InputLayer)             [(None, 1, 12, 40)]        0
     ________________________________________________________________________________________________________________________
-    encoder_cond (InputLayer)              [(None, 1, 52)]            0                                                     
+    encoder_cond (InputLayer)              [(None, 1, 52)]            0
     ________________________________________________________________________________________________________________________
-    encoder (Functional)                   [(None, 24), (None, 24)]   187210        encoder_input[0][0]                     
-                                                                                    encoder_cond[0][0]                      
+    encoder (Functional)                   [(None, 24), (None, 24)]   187210        encoder_input[0][0]
+                                                                                    encoder_cond[0][0]
     ________________________________________________________________________________________________________________________
-    latent (Functional)                    (None, 1, 24)              0             encoder[1][0]                           
-                                                                                    encoder[1][1]                           
+    latent (Functional)                    (None, 1, 24)              0             encoder[1][0]
+                                                                                    encoder[1][1]
     ________________________________________________________________________________________________________________________
-    decoder_cond (InputLayer)              [(None, 1, 52)]            0                                                     
+    decoder_cond (InputLayer)              [(None, 1, 52)]            0
     ________________________________________________________________________________________________________________________
-    prediction_cond (InputLayer)           [(None, 1, 52)]            0                                                     
+    prediction_cond (InputLayer)           [(None, 1, 52)]            0
     ________________________________________________________________________________________________________________________
-    beta (InputLayer)                      [(None, 1)]                0                                                     
+    beta (InputLayer)                      [(None, 1)]                0
     ________________________________________________________________________________________________________________________
-    decoder (Functional)                   (None, 1, 12, 40)          217090        latent[1][0]                            
-                                                                                    decoder_cond[0][0]                      
+    decoder (Functional)                   (None, 1, 12, 40)          217090        latent[1][0]
+                                                                                    decoder_cond[0][0]
     ________________________________________________________________________________________________________________________
-    prediction (Functional)                (None, 1, 12, 40)          217090        latent[1][0]                            
-                                                                                    prediction_cond[0][0]                   
+    prediction (Functional)                (None, 1, 12, 40)          217090        latent[1][0]
+                                                                                    prediction_cond[0][0]
     ========================================================================================================================
     Total params: 621,390
     Trainable params: 3,966
     Non-trainable params: 617,424
     ________________________________________________________________________________________________________________________
-    
+
 
 The following table summarizes the trainable layers and their number of parameters.
 
@@ -1327,7 +1320,7 @@ collection.summary_trainable(model2)
           prediction_block_2_R1_bn2          BatchNormalization                  128
         prediction_output_bn                 BatchNormalization                   80
     ________________________________________________________________________________
-    
+
 
 ### Load transfer-learned model weights (optional)
 
@@ -1342,7 +1335,7 @@ if (INITIAL_EPOCH > params.model_fit['epochs']):
 ```
 
     Load model weights from: logs\2023-06-16T15.59\model.100.h5
-    
+
 
 ### Fit model
 
@@ -1360,116 +1353,3 @@ hist = model2.fit(fit_gen2,
 
 
     0epoch [00:00, ?epoch/s]
-
-
-We store the parameters of the conditional layers to compare them later with the pre-trained parameters.
-
-
-```python
-tf_weights = {w.name.split(':')[0]: K.get_value(w) for w in model2.weights if 'cond' in w.name}
-```
-
-## Appendix
-
-### Compare weights of conditional layers
-
-
-```python
-keys = sorted(pre_weights.keys() & tf_weights.keys())
-```
-
-
-```python
-key_groups = [list(g) for k, g in itertools.groupby(keys, lambda x: x.split('_')[0])]
-rows = len(key_groups)
-cols = max([len(key_group) for key_group in key_groups])
-```
-
-#### Pre-trained values
-
-
-```python
-fig_args = dict(nrows=rows, ncols=cols, figsize=(3 * cols, 3 * rows), sharex=True, sharey=True, squeeze=False)
-plt_args = {'vmin': -0.3, 'vmax': 0.3, 'cmap': plt.get_cmap('bwr', 18)}
-fig, axs = plt.subplots(**fig_args)
-for ax_row, key_group in zip(axs, key_groups):
-    for uax, key in zip(ax_row, key_group):
-        value = pre_weights[key]
-        shape = value.shape
-        value = np.squeeze(value)
-        value = np.atleast_2d(value)
-        im = uax.pcolormesh(value, **plt_args)
-        m = np.mean(value)
-        s = np.std(value)
-        uax.set_title(f'{key}\n {shape=}', fontsize=9)
-        uax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-        uax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-
-plt.setp(axs[-1, :], 'xlabel', 'Output')
-plt.setp(axs[:, 0], 'ylabel', 'Input')
-_ = fig.colorbar(im, ax=axs[0, -1], extend='both')
-```
-
-
-    
-![png](VAEp_train_files/VAEp_train_127_0.png)
-    
-
-
-#### Transfer-learned values
-
-
-```python
-fig, axs = plt.subplots(**fig_args)
-for ax_row, key_group in zip(axs, key_groups):
-    for uax, key in zip(ax_row, key_group):
-        value = tf_weights[key]
-        shape = value.shape
-        value = np.squeeze(value)
-        value = np.atleast_2d(value)
-        im = uax.pcolormesh(value, **plt_args)
-        m = np.mean(value)
-        s = np.std(value)
-        uax.set_title(f'{key}\n {shape=}', fontsize=9)
-        uax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-        uax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-
-plt.setp(axs[-1, :], 'xlabel', 'Output')
-plt.setp(axs[:, 0], 'ylabel', 'Input')
-_ = fig.colorbar(im, ax=axs[0, -1], extend='both')
-```
-
-
-    
-![png](VAEp_train_files/VAEp_train_129_0.png)
-    
-
-
-#### Difference
-
-
-```python
-fig, axs = plt.subplots(**fig_args)
-for ax_row, key_group in zip(axs, key_groups):
-    for uax, key in zip(ax_row, key_group):
-        value = tf_weights[key] - pre_weights[key]
-        shape = value.shape
-        value = np.squeeze(value)
-        value = np.atleast_2d(value)
-        im = uax.pcolormesh(value, **plt_args)
-        m = np.mean(value)
-        s = np.std(value)
-        uax.set_title(f'{key}\n {shape=}', fontsize=9)
-        uax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-        uax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-
-plt.setp(axs[-1, :], 'xlabel', 'Output')
-plt.setp(axs[:, 0], 'ylabel', 'Input')
-_ = fig.colorbar(im, ax=axs[0, -1], extend='both')
-```
-
-
-    
-![png](VAEp_train_files/VAEp_train_131_0.png)
-    
-
