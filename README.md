@@ -18,6 +18,12 @@ The Jupyter notebooks demonstrate the process of training and exploring a Variat
 
     For more information on the data preparation see [`data/README.md`](/data/README.md).
 
-## Examples
+## Usage
 
-For example runs of the Jupyter notebooks see the [`examples/`](/examples/) folder of this repository. The examples are based on the sample data in the [`data/`](/data/) folder.
+This repository contains two Jupyter notebooks for model training and prediction:
+
+1. To train the VAE on CMIP6 data and transfer learn on observational data: [`VAEp_train.ipynb`](VAEp_train.ipynb)
+
+2. To make predictions on observational data: [`VAEp_explore.ipynb`](VAEp_explore.ipynb)
+
+The notebooks use sample data provided in the [`data/`](/data/) folder in this repository.
