@@ -27,3 +27,11 @@ This repository contains two Jupyter notebooks for model training and prediction
 2. To make predictions on observational data: [`VAEp_explore.ipynb`](VAEp_explore.ipynb)
 
 The notebooks use sample data provided in the [`data/`](/data/) folder in this repository.
+
+## Results
+
+The work is published in
+
+> Groth, 2023: Seasonal-level prediction in African countries for agricultural production risk assessment. Technical report.
+
+The report is available at [`report/VAE-precip-predict.pdf`](/report/VAE-precip-predict.pdf)  in this repository.
